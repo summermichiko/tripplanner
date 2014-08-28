@@ -7,19 +7,40 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var days = require('./routes/day');
+var sass = require('node-sass');
+var swig = require('swig');
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'html');
+app.set('view cache', false);
+swig.setDefaults({ cache: false });
+app.engine('html', swig.renderFile);
 
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use("/days", days);
+
+app.use(
+  sass.middleware({
+    src: __dirname + '/assets', //where the sass files are
+    dest: __dirname + '/public', //where css should go
+    // includePaths: __dirname + '/assets/stylesheets',
+    debug: true // obvious
+  })
+);
+
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+app.use('/bower_components', express.static(__dirname + '/bower_components'));
+
 
 app.use('/', routes);
 app.use('/users', users);

@@ -1,0 +1,194 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- ['hotel','thingsToDo','restaurant'] -->
+<div class="container">
+  <div class="row top-row">
+    <div class="col-sm-3" id="daysContainer"> </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-3 well" id="dayPanel"></div>
+    <div class="col-sm-9"><div id="map-canvas" style="height: 500px; width:100%;"></div></div>
+  </div>
+</div>
+
+
+<script>
+  {% autoescape false %}
+    var data = {
+      hotel:{{ hotels | json }},
+      thingsToDo: {{ thingsToDo | json }},
+      restaurant: {{ restaurants | json }}
+    }
+  {% endautoescape %}
+</script>
+
+<script src="/bower_components/jquery/dist/jquery.js"></script>
+<script src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBddYF6KwYV_xa4FJgKJSn_CwZ-a68-rZM&sensor=true"></script>
+<script src="/javascripts/models/days.js"></script>
+<script src="/javascripts/models/day.js"></script>
+<script src="/javascripts/models/activity.js"></script>
+<script src="/javascripts/views/activities.js"></script>
+<script src="/javascripts/views/day.js"></script>
+<script src="/javascripts/views/days.js"></script>
+<script src="/javascripts/views/dayBtn.js"></script>
+<script src="/javascripts/views/activity.js"></script>
+
+<script>
+
+  var map;
+  var mapInit = function() {
+    // initialize new google maps LatLng object
+    var myLatlng = new google.maps.LatLng(40.705786,-74.007672);
+
+    // set the map options hash
+    var mapOptions = {
+      center: myLatlng,
+      zoom: 16,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    // get the maps div's HTML obj
+    var map_canvas_obj = document.getElementById("map-canvas");
+
+    // initialize a new Google Map with the options
+    map = new google.maps.Map(map_canvas_obj, mapOptions);
+
+    // Add the marker to the map
+    // var marker = new google.maps.Marker({
+    //   position: myLatlng,
+    //   title:"Hello World!"
+    // });
+
+    // Add the marker to the map by calling setMap()
+    // marker.setMap(map);
+  }
+
+  var daysView;
+
+  var init = function() {
+    daysView = new DaysView();
+    mapInit();
+  }
+
+  init();
+
+  // var findById = function(type,id) {
+  //   for(var i = 0; i < data[type].length; i++) {
+  //     if(data[type][i]._id === id) return data[type][i];
+  //   }
+  //   return null;
+  // }
+
+
+  // var selectors = {}
+
+  // var types = ['hotel','thingsToDo','restaurant']
+  // types.forEach(function(activityType) {
+  //   selectors[activityType] = $("#" + activityType + "Select");
+  //   data[activityType].forEach(function(activity) {
+  //     selectors[activityType].append("<option value='" + activity._id + "'>" + activity.name + "</option>");
+  //   });
+  // });
+
+  // $(".addToDay").on('click',function() {
+  //   var type = $(this).attr('data-select');
+  //   var selector = selectors[type];
+
+  //   var select = $(selector);
+  //   var id = select.val();
+
+  //   if(!currentDay) return alert('You need to select a day before adding activities');
+
+  //   currentDay[type].push(findById(type,id));
+  //   renderDayPanel();
+  //   putMarkersOnMap();
+
+  // })
+
+  // var currentDay;
+
+  // var addDay = function() {
+  //   var newDay = {
+  //     dayNum: days.length + 1,
+  //     hotel: [],
+  //     thingsToDo: [],
+  //     restaurant: [],
+  //     markers: []
+  //   }
+  //   days.push(newDay);
+  //   var $btn = $("<button class='btn'>Day" + newDay.dayNum + "</button>");
+  //   $btn.on('click',function() {
+  //     if(currentDay) {
+  //       clearMarkers();
+  //     }
+  //     currentDay = newDay;
+  //     renderDayPanel();
+  //     putMarkersOnMap();
+  //   })
+  //   $("#daysContainer").append($btn)
+  // };
+
+  // var getGLatLng = function(activity) {
+  //   var latlngarr = activity.place[0].location;
+  //   return new google.maps.LatLng(latlngarr[0],latlngarr[1]);
+  // }
+
+  // var clearMarkers = function() {
+  //   while(currentDay.markers.length) {
+  //     currentDay.markers.pop().setMap(null);
+  //   }
+  // }
+
+  // var putMarkersOnMap = function() {
+  //   types.forEach(function(type) {
+  //     currentDay[type].forEach(function(activity) {
+  //       currentDay.markers.push(new google.maps.Marker({
+  //         map: map,
+  //         title: activity.name,
+  //         position: getGLatLng(activity)
+  //       }));
+  //     });
+  //   });
+  // }
+
+  // var renderDayPanel = function() {
+
+  //   var str = "<p>hotels</p><ul>";
+  //   currentDay.hotel.forEach(function(h) {
+  //     str += "<li>" + h.name + "</li>";
+  //   });
+
+  //   str += "</ul><p>Restaurants</p><ul>";
+
+  //   currentDay.restaurant.forEach(function(h) {
+  //     str += "<li>" + h.name + "</li>";
+  //   });
+
+  //   str += "</ul><p>Things To Do</p><ul>";
+
+  //   currentDay.thingsToDo.forEach(function(h) {
+  //     str += "<li>" + h.name + "</li>";
+  //   });
+
+  //   str += "</ul>";
+
+
+  //   $("#dayPanel").html(str);
+  // };
+
+
+  // $("#addDayBtn").on('click',function() {
+  //   addDay();
+  // })
+
+
+
+  // addDay();
+  // mapInit();
+
+</script>
+
+
+
+{% endblock %}
